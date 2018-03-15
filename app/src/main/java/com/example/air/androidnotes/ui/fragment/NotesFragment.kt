@@ -5,9 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.example.air.androidnotes.R
 import com.example.air.androidnotes.domain.Note
 import com.example.air.androidnotes.view_model.NotesViewModel
@@ -34,7 +32,27 @@ class NotesFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         initUI()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.add_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_new_note -> {
+                fragmentManager?.beginTransaction()
+                        ?.replace(R.id.content, newInstanceAddNoteFragment())
+                        ?.addToBackStack(TAG)
+                        ?.commit()
+                super.onOptionsItemSelected(item)
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    }
+
     private fun initUI() {
+        setHasOptionsMenu(true)
 
     }
 
@@ -68,4 +86,4 @@ class NotesFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 }
 
-fun newInstance() = NotesFragment()
+fun newInstanceNoteFragment() = NotesFragment()

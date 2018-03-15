@@ -24,10 +24,10 @@ class NotesViewModel : ViewModel(), LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun unSubscribeViewModel() {
-        for (disposable in notesRepository.allCompositeDisposable) {
-            compositeDisposable.addAll(disposable)
-        }
-        compositeDisposable.clear()
+//        for (disposable in notesRepository.allCompositeDisposable) {
+//            compositeDisposable.addAll(disposable)
+//        }
+//        compositeDisposable.clear()
     }
 
 }
