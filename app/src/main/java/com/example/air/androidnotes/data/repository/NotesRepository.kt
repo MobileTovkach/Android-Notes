@@ -17,7 +17,6 @@ class NotesRepository @Inject constructor(
 
     internal val allCompositeDisposable: MutableList<Disposable> = arrayListOf()
 
-    override fun getTotalNotes() = roomNotesDataSource.dao().getNotesTotal()
 
     override fun addNote(title: String, description: String) {
         roomNotesDataSource.dao().insertNote(NotesEntity(0, title, description, System.currentTimeMillis()))

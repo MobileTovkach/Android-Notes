@@ -9,9 +9,6 @@ import io.reactivex.Flowable
 @Dao
 interface RoomNotesDao {
 
-    @Query(RoomContract.SELECT_NOTES_COUNT)
-    fun getNotesTotal(): Flowable<Int>
-
     @Insert
     fun insertNote(notes: NotesEntity)
 
