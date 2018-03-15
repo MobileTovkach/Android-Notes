@@ -13,7 +13,7 @@ interface RoomNotesDao {
     fun getNotesTotal(): Flowable<Int>
 
     @Insert
-    fun insertAll(notes: List<NotesEntity>)
+    fun insertNote(notes: NotesEntity)
 
     @Delete
     fun deleteNote(note: NotesEntity)

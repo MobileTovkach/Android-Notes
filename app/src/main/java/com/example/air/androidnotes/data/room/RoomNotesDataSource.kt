@@ -18,6 +18,8 @@ abstract class RoomNotesDataSource: RoomDatabase() {
                 RoomContract.DATABASE_NOTES
         ).build()
 
+
+
     }
 
 }
