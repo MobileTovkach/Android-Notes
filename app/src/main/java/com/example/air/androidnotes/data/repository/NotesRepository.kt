@@ -15,35 +15,35 @@ import javax.inject.Singleton
 class NotesRepository @Inject constructor(
         private val roomNotesDataSource: RoomNotesDataSource): Repository {
 
-    private val allCompositeDisposable: MutableList<Disposable> = arrayListOf()
+    internal val allCompositeDisposable: MutableList<Disposable> = arrayListOf()
 
-    override fun getTotalNotes() = roomNotesDataSource.currencyDao().getNotesTotal()
+    override fun getTotalNotes() = roomNotesDataSource.dao().getNotesTotal()
 
     override fun addNote(title: String, description: String) {
-        roomNotesDataSource.currencyDao().insertNote(NotesEntity(0, title, description))
+        roomNotesDataSource.dao().insertNote(NotesEntity(0, title, description, System.currentTimeMillis()))
     }
 
     override fun removeNote(note: NotesEntity) {
-        roomNotesDataSource.currencyDao().deleteNote(note)
+        roomNotesDataSource.dao().deleteNote(note)
     }
 
     override fun getNotesList(): LiveData<List<Note>> {
-        val roomCurrencyDao = roomNotesDataSource.currencyDao()
+        val roomCurrencyDao = roomNotesDataSource.dao()
         val mutableLiveData = MutableLiveData<List<Note>>()
         val disposable = roomCurrencyDao.getAllNotes()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ currencyList ->
-                    mutableLiveData.value = transform(currencyList)
+                .subscribe({ list ->
+                    mutableLiveData.value = transform(list)
                 }, { t: Throwable? -> t!!.printStackTrace() })
         allCompositeDisposable.add(disposable)
         return mutableLiveData
     }
 
-    private fun transform(currencies: List<NotesEntity>): List<Note> {
+    private fun transform(list: List<NotesEntity>): List<Note> {
         val currencyList = ArrayList<Note>()
-        currencies.forEach {
-            currencyList.add(Note(it.titleNotes, it.descriptionNotes))
+        list.forEach {
+            currencyList.add(Note(it.titleNotes, it.descriptionNotes, it.editingDate))
         }
         return currencyList
     }

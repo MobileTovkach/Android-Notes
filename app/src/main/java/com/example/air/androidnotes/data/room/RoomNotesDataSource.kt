@@ -8,7 +8,7 @@ import android.content.Context
         version = 1)
 abstract class RoomNotesDataSource: RoomDatabase() {
 
-    abstract fun currencyDao(): RoomNotesDao
+    abstract fun dao(): RoomNotesDao
 
     companion object {
 

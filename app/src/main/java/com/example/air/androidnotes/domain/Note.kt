@@ -1,3 +1,3 @@
 package com.example.air.androidnotes.domain
 
-data class Note (var title: String, var description: String)
+data class Note (val title: String, val description: String, val editingDate: Long)
