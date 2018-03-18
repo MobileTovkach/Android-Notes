@@ -19,7 +19,11 @@ class NotesRepository @Inject constructor(
 
 
     override fun addNote(title: String, description: String) {
-        roomNotesDataSource.dao().insertNote(NotesEntity(1, title, description, System.currentTimeMillis()))
+        roomNotesDataSource.dao().insertNote(NotesEntity( 0, title, description, System.currentTimeMillis()))
+    }
+
+    override fun updateNote( id: Long?, title: String, description: String) {
+        roomNotesDataSource.dao().updateNote(NotesEntity(id, title, description, System.currentTimeMillis()))
     }
 
     override fun removeNote(note: NotesEntity) {

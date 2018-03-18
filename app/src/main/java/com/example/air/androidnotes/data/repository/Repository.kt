@@ -12,4 +12,5 @@ interface Repository {
 
     fun getNotesList(): LiveData<List<Note>>
 
+    fun updateNote(id: Long?, title: String, description: String)
 }

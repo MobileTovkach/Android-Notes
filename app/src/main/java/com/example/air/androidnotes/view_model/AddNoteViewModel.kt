@@ -8,7 +8,6 @@ import android.util.Log
 import com.example.air.androidnotes.app.NotesApplication
 import com.example.air.androidnotes.data.repository.NotesRepository
 import com.example.air.androidnotes.data.room.NotesEntity
-import com.example.air.androidnotes.domain.Note
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -50,8 +49,46 @@ class AddNoteViewModel : ViewModel(), LifecycleObserver {
                 })
     }
 
+    fun updateNote(id: Long?, title: String, description: String) {
+        Completable.fromAction { notesRepository.updateNote(id, title, description) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : CompletableObserver {
+                    override fun onSubscribe(@NonNull d: Disposable) {
+                        compositeDisposable.add(d)
+                    }
+
+                    override fun onComplete() {
+                        Log.i(NotesRepository::class.java.simpleName, "DataSource has been Populated")
+
+                    }
+
+                    override fun onError(@NonNull e: Throwable) {
+                        e.printStackTrace()
+                        Log.e(NotesRepository::class.java.simpleName, "DataSource hasn't been Populated")
+                    }
+                })
+    }
+
     fun removeNote(note: NotesEntity){
-        notesRepository.removeNote(note)
+        Completable.fromAction { notesRepository.removeNote(note) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : CompletableObserver {
+                    override fun onSubscribe(@NonNull d: Disposable) {
+                        compositeDisposable.add(d)
+                    }
+
+                    override fun onComplete() {
+                        Log.i(NotesRepository::class.java.simpleName, "DataSource has been Populated")
+
+                    }
+
+                    override fun onError(@NonNull e: Throwable) {
+                        e.printStackTrace()
+                        Log.e(NotesRepository::class.java.simpleName, "DataSource hasn't been Populated")
+                    }
+                })
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
@@ -61,7 +98,6 @@ class AddNoteViewModel : ViewModel(), LifecycleObserver {
         }
         compositeDisposable.clear()
     }
-
     private fun initializeDagger() = NotesApplication.appComponent.inject(this)
 
 }

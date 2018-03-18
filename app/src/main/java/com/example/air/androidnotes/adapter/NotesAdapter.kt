@@ -5,19 +5,18 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.air.androidnotes.R
-import com.example.air.androidnotes.data.room.NotesEntity
 import com.example.air.androidnotes.domain.Note
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NotesAdapter: RecyclerView.Adapter<NotesHolder>() {
+class NotesAdapter(private val notesCallback: NotesHolder.CallbackData) : RecyclerView.Adapter<NotesHolder>() {
 
     private var data: ArrayList<Note> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesHolder {
         val inflatedView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.note_list_item, parent, false)
-        return NotesHolder(inflatedView)
+        return NotesHolder(inflatedView, notesCallback)
     }
 
     override fun onBindViewHolder(holder: NotesHolder, position: Int) {
@@ -29,8 +28,8 @@ class NotesAdapter: RecyclerView.Adapter<NotesHolder>() {
     override fun getItemCount(): Int = data.size
 
     @SuppressLint("SimpleDateFormat")
-    private fun getStringDate(milisec: Long): String =
-            SimpleDateFormat("HH:mm MMM dd, yyyy").format(Date(milisec))
+    private fun getStringDate(milisec: Long?): String =
+            SimpleDateFormat("HH:mm MMM dd, yyyy").format(milisec?.let { Date(it) })
 
     fun setData(list: ArrayList<Note>) {
         data.clear()

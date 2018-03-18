@@ -9,12 +9,15 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.example.air.androidnotes.R
 import com.example.air.androidnotes.adapter.NotesAdapter
+import com.example.air.androidnotes.adapter.NotesHolder
 import com.example.air.androidnotes.domain.Note
 import com.example.air.androidnotes.view_model.NotesViewModel
 import kotlinx.android.synthetic.main.fragment_notes.*
 import kotlinx.android.synthetic.main.fragment_notes.view.*
 
-class NotesFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class NotesFragment : Fragment(),
+        SwipeRefreshLayout.OnRefreshListener,
+        NotesHolder.CallbackData{
 
     private lateinit var notesViewModel: NotesViewModel
     private lateinit var noteList: ArrayList<Note>
@@ -31,6 +34,7 @@ class NotesFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+
         view.refresh_notes.setOnRefreshListener(this)
         view.refresh_notes.isRefreshing = true
         getListNotes()
@@ -55,8 +59,24 @@ class NotesFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     }
 
+    override fun openEditNoteFragment(position: Int) {
+        val bundle = Bundle()
+        noteList[position].idNote?.let { bundle.putLong("id", it) }
+        bundle.putString("title", noteList[position].title)
+        bundle.putString("description", noteList[position].description)
+        noteList[position].editingDate?.let { bundle.putLong("time", it) }
+
+        val fragment = newInstanceAddNoteFragment()
+        fragment.arguments = bundle
+
+        fragmentManager?.beginTransaction()
+                ?.replace(R.id.content, fragment)
+                ?.addToBackStack(this.tag)
+                ?.commit()
+    }
+
     private fun initRecyclerView() {
-        val notesAdapter = NotesAdapter()
+        val notesAdapter = NotesAdapter(this)
         notesAdapter.setData(noteList)
         list_notes.adapter = notesAdapter
         list_notes.layoutManager = LinearLayoutManager(context)
