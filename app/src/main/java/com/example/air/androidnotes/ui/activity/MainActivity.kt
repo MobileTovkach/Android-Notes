@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.example.air.androidnotes.R
+import com.example.air.androidnotes.liseners.OnBackPressedListener
 import com.example.air.androidnotes.ui.fragment.newInstanceNoteFragment
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +25,19 @@ class MainActivity : AppCompatActivity() {
                 .commit()
     }
 
+    override fun onBackPressed() {
+        val fm = supportFragmentManager
+        var backPressedListener: OnBackPressedListener? = null
+        for (fragment in fm.fragments) if (fragment is OnBackPressedListener) {
+            backPressedListener = fragment
+            break
+        }
+
+        when {
+            backPressedListener != null -> backPressedListener.onBackPressed()
+            else -> super.onBackPressed()
+        }
+    }
 
 
 }

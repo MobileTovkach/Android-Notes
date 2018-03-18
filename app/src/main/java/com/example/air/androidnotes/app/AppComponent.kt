@@ -1,5 +1,6 @@
 package com.example.air.androidnotes.app
 
+import com.example.air.androidnotes.view_model.AddNoteViewModel
 import com.example.air.androidnotes.view_model.NotesViewModel
 import dagger.Component
 import javax.inject.Singleton
@@ -9,5 +10,7 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun inject(notesViewModel: NotesViewModel)
+
+    fun inject(addNotesViewModel: AddNoteViewModel)
 
 }

@@ -1,6 +1,8 @@
 package com.example.air.androidnotes.view_model
 
 import android.arch.lifecycle.*
+import android.os.Bundle
+import com.example.air.androidnotes.app.NotesApplication
 import com.example.air.androidnotes.data.repository.NotesRepository
 import com.example.air.androidnotes.domain.Note
 import io.reactivex.disposables.CompositeDisposable
@@ -15,19 +17,23 @@ class NotesViewModel : ViewModel(), LifecycleObserver {
 
     private val compositeDisposable = CompositeDisposable()
 
+    init {
+        initializeDagger()
+    }
+
     fun loadNotesList(): LiveData<List<Note>>? {
-        if (liveCurrencyData == null) {
-            liveCurrencyData = notesRepository.getNotesList()
-        }
+        liveCurrencyData = notesRepository.getNotesList()
         return liveCurrencyData
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun unSubscribeViewModel() {
-//        for (disposable in notesRepository.allCompositeDisposable) {
-//            compositeDisposable.addAll(disposable)
-//        }
-//        compositeDisposable.clear()
+        for (disposable in notesRepository.allCompositeDisposable) {
+            compositeDisposable.addAll(disposable)
+        }
+        compositeDisposable.clear()
     }
+
+    private fun initializeDagger() = NotesApplication.appComponent.inject(this)
 
 }
